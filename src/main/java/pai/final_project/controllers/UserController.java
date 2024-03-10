@@ -21,7 +21,6 @@ public class UserController {
     private UserDao dao;
     @GetMapping("/login")
     public String loginPage() {
-//zwrócenie nazwy widoku logowania - login.html
         return "login";
     }
 }
