@@ -23,4 +23,24 @@ public class UserController {
     public String loginPage() {
         return "login";
     }
+    @GetMapping("/register")
+    public String registerPage(Model m) {
+        m.addAttribute("user", new User());
+        return "register";
+    }
+    @PostMapping("/register")
+    public String registerPagePOST(@Valid User user, BindingResult binding) {
+        if (binding.hasErrors()){
+            return "register";
+        }
+        User user1 = dao.findByLogin(user.getLogin());
+        if (user1 == null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            dao.save(user);
+        }
+        else{
+            return "register";
+        }
+        return "redirect:/login";
+    }
 }
