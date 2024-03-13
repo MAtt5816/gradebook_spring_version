@@ -15,6 +15,7 @@
 	<description>Final project for PAI lab</description>
 	<properties>
 		<java.version>21</java.version>
+		<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.WebSphereExtendedJtaPlatform" />
 	</properties>
 	<dependencies>
 		<dependency>

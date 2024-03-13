@@ -12,29 +12,30 @@ import pai.final_project.enums.UserRoles;
 @Getter
 @Setter
 @Table(name = "Users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer userid;
+    protected Integer id;
 
     @NotNull
     @NotEmpty
-    private String name;
+    protected String name;
 
     @NotNull
     @NotEmpty
-    private String surname;
+    protected String surname;
 
     @NotNull
     @NotEmpty
     @Column(unique = true)
-    private String login;
+    protected String login;
 
     @NotNull
     @NotEmpty
     @Size(min = 8)
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
-    private String password;
+    protected String password;
 
     @NotNull
     private UserRoles role;
