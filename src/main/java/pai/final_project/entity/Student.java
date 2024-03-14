@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,4 +23,7 @@ public class Student extends User{
     @NotEmpty
     @Pattern(regexp = "^\\d{4}/\\d{4}$")
     private String schoolYear;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Grade> gradeList;
 }
