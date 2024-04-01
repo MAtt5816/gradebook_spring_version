@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "Grades")
 public class Grade {
     @Id
@@ -18,7 +20,6 @@ public class Grade {
     private Integer id;
 
     @NotNull
-    @NotEmpty
     @DecimalMin("2.0")
     @DecimalMax("5.0")
     private Double mark;
@@ -34,4 +35,12 @@ public class Grade {
 
     @ManyToOne
     private Teacher teacher;
+
+    public Grade(Double mark, String comment, Subject subject, Student student, Teacher teacher){
+        this.mark = mark;
+        this.comment = comment;
+        this.subject = subject;
+        this.student = student;
+        this.teacher = teacher;
+    }
 }

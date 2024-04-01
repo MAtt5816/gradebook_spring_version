@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "Subjects")
 public class Subject {
     @Id
@@ -20,4 +22,7 @@ public class Subject {
     @NotNull
     @NotEmpty
     private String name;
+    public Subject(String name) {
+        this.name = name;
+    }
 }

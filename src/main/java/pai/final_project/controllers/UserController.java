@@ -1,8 +1,15 @@
 package pai.final_project.controllers;
+import org.springframework.data.domain.Sort;
+import pai.final_project.dao.GradeDao;
+import pai.final_project.dao.StudentDao;
+import pai.final_project.dao.SubjectDao;
 import pai.final_project.dao.UserDao;
+import pai.final_project.entity.Grade;
+import pai.final_project.entity.Student;
+import pai.final_project.entity.Subject;
 import pai.final_project.entity.User;
 import java.security.Principal;
-import java.util.Optional;
+import java.util.*;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +17,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pai.final_project.enums.UserRoles;
 
 @Controller
 public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private UserDao dao;
+    private UserDao userDao;
+    @Autowired
+    private StudentDao studentDao;
+    @Autowired
+    private GradeDao gradeDao;
+    @Autowired
+    private SubjectDao subjectDao;
     @GetMapping("/login")
     public String loginPage() {
         return "login";
@@ -34,10 +45,10 @@ public class UserController {
         if (binding.hasErrors()){
             return "register";
         }
-        User user1 = dao.findByLogin(user.getLogin());
+        User user1 = userDao.findByLogin(user.getLogin());
         if (user1 == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            dao.save(user);
+            userDao.save(user);
         }
         else{
             return "register";
@@ -45,15 +56,48 @@ public class UserController {
         return "redirect:/login";
     }
 
-//    @GetMapping("/profile")
-//    public String profilePage(Model m, Principal principal) {
-////dodanie do modelu aktualnie zalogowanego użytkownika:
-//        m.addAttribute("user", dao.findByLogin(principal.getName()));
-////zwrócenie nazwy widoku profilu użytkownika - profile.html
-//        return "profile";
-//    }
-//
-//    @GetMapping("/users")
+    @GetMapping("/")
+    public String mainPage(Model m, Principal principal) {
+        User user = userDao.findByLogin(principal.getName());
+        List<Subject> subjects = subjectDao.findAll(Sort.by(Sort.Direction.ASC, "name"));
+        int gradesMaxCount = 1;
+        LinkedHashMap<Subject, List<Grade>> gradesBySubject = new LinkedHashMap<>();
+
+        switch (user.getRole()) {
+            case STUDENT:
+                for(var subject : subjects){
+                    var grades = gradeDao.findAllByStudentLoginAndSubjectName(user.getLogin(), subject.getName());
+                    gradesBySubject.put(subject, grades);
+                    gradesMaxCount = Math.max(gradesMaxCount, grades.size());
+                }
+
+                m.addAttribute("subjects", gradesBySubject);
+                break;
+            case TEACHER:
+                List<Student> students = (List<Student>) studentDao.findAll(Sort.by(Sort.Direction.ASC, "surname"));
+                LinkedHashMap<Student, LinkedHashMap<Subject, List<Grade>>> gradesBySubjectAndStudent = new LinkedHashMap<>();
+
+                for(var student : students){
+                    gradesBySubject = new LinkedHashMap<>();
+                    for(var subject : subjects){
+                        var grades = gradeDao.findAllByStudentLoginAndSubjectName(student.getLogin(), subject.getName());
+                        gradesBySubject.put(subject, grades);
+                        gradesMaxCount = Math.max(gradesMaxCount, grades.size());
+                    }
+
+                    gradesBySubjectAndStudent.put(student, gradesBySubject);
+                }
+
+                m.addAttribute("studentsGrades", gradesBySubjectAndStudent);
+                break;
+        }
+        m.addAttribute("gradesMaxCount", gradesMaxCount);
+        m.addAttribute("user", user);
+
+        return "index";
+    }
+
+    //    @GetMapping("/users")
 //    public String getAllUsers(Model m, Principal principal){
 //        //definicja metody, która zwróci do widoku users.html listę
 ////użytkowników z bd
