@@ -10,10 +10,6 @@
             position: fixed; bottom: 0px; left: 1px;
             height: 50px;width: 100%;
         }
-        .nav > li {
-            display: inline;
-            background: limegreen;
-        }
         a { text-decoration: none; }
         th,td {border: solid 1px black;padding: 5px;}
     </style>
@@ -22,25 +18,20 @@
 </head>
 <body>
 <div th:fragment="navigationPanel" >
-<!--    <ul class="nav">-->
-<!--        <li sec:authorize="!isAuthenticated()">-->
-<!--            <a th:href="@{/register}">Zarejestruj się</a></li>-->
-<!--        <li sec:authorize="isAuthenticated()">-->
-<!--            <a th:href="@{/profile}">Wyświetl swoje konto</a>-->
-<!--        </li>-->
-<!--        <li sec:authorize="isAuthenticated()">-->
-<!--            <a th:href="@{/users}">Wyświetl użytkowników</a></li>-->
-<!--        <li sec:authorize="isAuthenticated()">-->
-<!--            <a th:href="@{/editUser}">Edytuj konto</a>-->
-<!--        </li>-->
-<!--        <li sec:authorize="isAuthenticated()">-->
-<!--            <a th:href="@{/deleteUser}">Usuń konto</a>-->
-<!--        </li>-->
-<!--        <li sec:authorize="!isAuthenticated()">-->
-<!--            <a th:href="@{/login}">Zaloguj się</a></li>-->
-<!--        <li sec:authorize="isAuthenticated()">-->
-<!--            <a th:href="@{/logout}">Wyloguj się</a></li>-->
-<!--    </ul>-->
+    <ul class="navbar bg-base-100">
+        <li sec:authorize="!isAuthenticated()">
+            <a class="btn btn-ghost text-xl" th:href="@{/register}">Zarejestruj się</a></li>
+        <li sec:authorize="isAuthenticated()">
+            <a class="btn btn-ghost text-xl" th:href="@{/editUser}">Edytuj konto</a>
+        </li>
+        <li sec:authorize="isAuthenticated()">
+            <a class="btn btn-ghost text-xl" th:href="@{/deleteUser}">Usuń konto</a>
+        </li>
+        <li sec:authorize="!isAuthenticated()">
+            <a class="btn btn-ghost text-xl" th:href="@{/login}">Zaloguj się</a></li>
+        <li sec:authorize="isAuthenticated()">
+            <a class="btn btn-ghost text-xl" th:href="@{/logout}">Wyloguj się</a></li>
+    </ul>
 </div>
 <div th:fragment="footer">
     <footer class="footer"><hr/>
