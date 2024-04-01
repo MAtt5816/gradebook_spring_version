@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "Teachers")
 @PrimaryKeyJoinColumn(name = "users_id")
 public class Teacher extends User{
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Grade> gradeList;
 
     public Teacher(String name, String surname, String login, String password) {

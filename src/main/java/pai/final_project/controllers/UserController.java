@@ -1,4 +1,5 @@
 package pai.final_project.controllers;
+import jakarta.persistence.CascadeType;
 import org.springframework.data.domain.Sort;
 import pai.final_project.dao.*;
 import pai.final_project.entity.*;
@@ -103,14 +104,6 @@ public class UserController {
         return "index";
     }
 
-    //    @GetMapping("/users")
-//    public String getAllUsers(Model m, Principal principal){
-//        //definicja metody, która zwróci do widoku users.html listę
-////użytkowników z bd
-//        m.addAttribute("usersy", dao.findAll());
-//        return "users";
-//    }
-//
 //    @GetMapping("/editUser")
 //    public String editUser(Model m, Principal principal){
 //        m.addAttribute("user", dao.findByLogin(principal.getName()));
@@ -130,17 +123,22 @@ public class UserController {
 //        dao.save(user1);
 //        return "redirect:/profile";
 //    }
-//
-//    @GetMapping("/deleteUser")
-//    public String deleteUser(Model m, Principal principal){
-//        m.addAttribute("user", dao.findByLogin(principal.getName()));
-//        return "delete";
-//    }
-//
-//    @PostMapping("deleteUser")
-//    public String deleteUserDELETE(@ModelAttribute User user){
-//        User user1 = dao.findByLogin(user.getLogin());
-//        dao.delete(user1);
-//        return "redirect:/logout";
-//    }
+
+    @GetMapping("/deleteUser")
+    public String deleteUser(Model m, Principal principal){
+        m.addAttribute("user", userDao.findByLogin(principal.getName()));
+        return "delete";
+    }
+
+    @PostMapping("deleteUser")
+    public String deleteUserDELETE(@ModelAttribute User user, Principal principal){
+        User user1 = userDao.findByLogin(user.getLogin());
+        if (Objects.equals(principal.getName(), user1.getLogin())){
+            userDao.delete(user1);
+            return "redirect:/logout";
+        }
+        else {
+            return "redirect:/";
+        }
+    }
 }

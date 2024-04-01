@@ -25,7 +25,7 @@ public class Student extends User{
     @Pattern(regexp = "^$|^\\d{4}/\\d{4}$")
     private String schoolYear;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Grade> gradeList;
 
     public Student(String name, String surname, String login,
