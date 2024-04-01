@@ -1,13 +1,8 @@
 package pai.final_project.controllers;
 import org.springframework.data.domain.Sort;
-import pai.final_project.dao.GradeDao;
-import pai.final_project.dao.StudentDao;
-import pai.final_project.dao.SubjectDao;
-import pai.final_project.dao.UserDao;
-import pai.final_project.entity.Grade;
-import pai.final_project.entity.Student;
-import pai.final_project.entity.Subject;
-import pai.final_project.entity.User;
+import pai.final_project.dao.*;
+import pai.final_project.entity.*;
+
 import java.security.Principal;
 import java.util.*;
 
@@ -27,6 +22,8 @@ public class UserController {
     private UserDao userDao;
     @Autowired
     private StudentDao studentDao;
+    @Autowired
+    private TeacherDao teacherDao;
     @Autowired
     private GradeDao gradeDao;
     @Autowired
@@ -48,7 +45,16 @@ public class UserController {
         User user1 = userDao.findByLogin(user.getLogin());
         if (user1 == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userDao.save(user);
+            switch (user.getRole()){
+                case STUDENT:
+                    Student student = new Student(user);
+                    studentDao.save(student);
+                    break;
+                case TEACHER:
+                    Teacher teacher = new Teacher(user);
+                    teacherDao.save(teacher);
+                    break;
+            }
         }
         else{
             return "register";
@@ -74,7 +80,7 @@ public class UserController {
                 m.addAttribute("subjects", gradesBySubject);
                 break;
             case TEACHER:
-                List<Student> students = (List<Student>) studentDao.findAll(Sort.by(Sort.Direction.ASC, "surname"));
+                List<Student> students = studentDao.findAll(Sort.by(Sort.Direction.ASC, "surname"));
                 LinkedHashMap<Student, LinkedHashMap<Subject, List<Grade>>> gradesBySubjectAndStudent = new LinkedHashMap<>();
 
                 for(var student : students){

@@ -23,4 +23,9 @@ public class Teacher extends User{
         super(name, surname, login, password, UserRoles.TEACHER);
         this.gradeList = Collections.emptyList();
     }
+
+    public Teacher(User user){
+        super(user.name, user.surname, user.login, user.password, UserRoles.TEACHER);
+        this.gradeList = Collections.emptyList();
+    }
 }

@@ -20,13 +20,9 @@ import java.util.List;
 @Table(name = "Students")
 @PrimaryKeyJoinColumn(name = "users_id")
 public class Student extends User{
-    @NotNull
-    @NotEmpty
     private String studentGroup;
 
-    @NotNull
-    @NotEmpty
-    @Pattern(regexp = "^\\d{4}/\\d{4}$")
+    @Pattern(regexp = "^$|^\\d{4}/\\d{4}$")
     private String schoolYear;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -37,6 +33,13 @@ public class Student extends User{
         super(name, surname, login, password, UserRoles.STUDENT);
         this.studentGroup = studentGroup;
         this.schoolYear = schoolYear;
+        this.gradeList = Collections.emptyList();
+    }
+
+    public Student(User user){
+        super(user.name, user.surname, user.login, user.password, UserRoles.STUDENT);
+        this.studentGroup = "";
+        this.schoolYear = "";
         this.gradeList = Collections.emptyList();
     }
 }
