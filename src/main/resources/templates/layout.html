@@ -19,6 +19,9 @@
 <body>
 <div th:fragment="navigationPanel" >
     <ul class="navbar bg-base-100">
+        <li sec:authorize="isAuthenticated()">
+            <a class="btn btn-ghost text-xl" th:href="@{/}">Strona główna</a>
+        </li>
         <li sec:authorize="!isAuthenticated()">
             <a class="btn btn-ghost text-xl" th:href="@{/register}">Zarejestruj się</a></li>
         <li sec:authorize="isAuthenticated()">

@@ -23,7 +23,7 @@
                                 <td th:each="grade : ${subject.value}">
                                     <p th:text="${grade.mark}"></p>
                                 </td>
-                                <td th:colspan="${gradesMaxCount}" th:if="${subject.value.isEmpty()}"></td>
+                                <td th:colspan="${gradesMaxCount - subject.value.size()}" th:if="${gradesMaxCount - subject.value.size() > 0}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -46,10 +46,11 @@
                                 <td th:each="grade : ${subject.value}">
                                     <p th:text="${grade.mark}"></p>
                                 </td>
-                                <td th:colspan="${gradesMaxCount}" th:if="${subject.value.isEmpty()}"></td>
+                                <td th:colspan="${gradesMaxCount - subject.value.size()}" th:if="${gradesMaxCount - subject.value.size() > 0}"></td>
                             </tr>
                             </tbody>
                         </table>
+                        <a th:href="'/addGrade/' + ${student.key.login}" class="btn btn-outline border btn-info">Dodaj +</a>
                     </div>
                 </div>
             </div>
