@@ -6,4 +6,5 @@ import pai.final_project.entity.Teacher;
 
 @Transactional
 public interface TeacherDao extends CrudRepository<Teacher, Integer> {
+    public Teacher findByLogin(String login);
 }

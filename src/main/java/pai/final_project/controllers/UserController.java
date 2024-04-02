@@ -1,6 +1,7 @@
 package pai.final_project.controllers;
 import jakarta.persistence.CascadeType;
 import org.springframework.data.domain.Sort;
+import org.springframework.validation.ObjectError;
 import pai.final_project.dao.*;
 import pai.final_project.entity.*;
 
@@ -104,25 +105,40 @@ public class UserController {
         return "index";
     }
 
-//    @GetMapping("/editUser")
-//    public String editUser(Model m, Principal principal){
-//        m.addAttribute("user", dao.findByLogin(principal.getName()));
-//        return "edit";
-//    }
-//
-//    @PostMapping("/editUser")
-//    public String editUserPUT(@Valid User user, BindingResult binding){
-//        if (binding.hasErrors()){
-//            return "edit";
-//        }
-//
-//        User user1 = dao.findByLogin(user.getLogin());
-//        user1.setName(user.getName());
-//        user1.setSurname(user.getSurname());
-//        user1.setPassword(passwordEncoder.encode(user.getPassword()));
-//        dao.save(user1);
-//        return "redirect:/profile";
-//    }
+    @GetMapping("/editUser")
+    public String editUser(Model m, Principal principal){
+        m.addAttribute("user", userDao.findByLogin(principal.getName()));
+        return "edit";
+    }
+
+    @PostMapping("/editUser")
+    public String editUserPUT(@Valid User user, BindingResult binding, Principal principal){
+        if (binding.hasErrors()){
+            return "edit";
+        }
+
+        User user1 = userDao.findByLogin(user.getLogin());
+        if(Objects.equals(principal.getName(), user1.getLogin())) {
+            user1.setName(user.getName());
+            user1.setSurname(user.getSurname());
+            user1.setPassword(passwordEncoder.encode(user.getPassword()));
+            switch (user1.getRole()) {
+                case STUDENT:
+                    Student student = studentDao.findByLogin(user1.getLogin());
+                    studentDao.save(student);
+                    break;
+                case TEACHER:
+                    Teacher teacher = teacherDao.findByLogin(user1.getLogin());
+                    teacherDao.save(teacher);
+                    break;
+            }
+            return "redirect:/";
+        }
+        else{
+            binding.addError(new ObjectError("Wrong account logged-in", "The login provided does not match the current logged in user"));
+            return "edit";
+        }
+    }
 
     @GetMapping("/deleteUser")
     public String deleteUser(Model m, Principal principal){

@@ -6,4 +6,5 @@ import pai.final_project.entity.Student;
 
 @Transactional
 public interface StudentDao extends JpaRepository<Student, Integer> {
+    public Student findByLogin(String login);
 }
