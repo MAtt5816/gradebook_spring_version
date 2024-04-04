@@ -81,7 +81,23 @@
             <form method="dialog">
                 <!-- if there is a button in form, it will close the modal -->
                 <a th:if="${user.role.name() == 'TEACHER'}" th:href="'/editGrade/' + ${grade.id}" class="btn btn-outline border btn-info">Edytuj</a>
+                <button th:if="${user.role.name() == 'TEACHER'}" class="btn btn-outline border btn-error" th:onclick="'gradeDelete' + ${grade.id} + '.showModal()'">Usuń</button>
                 <button class="btn">Zamknij</button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+<dialog th:if="${user.role.name() == 'TEACHER'}" th:each="grade : ${grades}" th:id="'gradeDelete' + ${grade.id}" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">Usuń ocenę</h3>
+        <p class="py-4">Czy na pewno chcesz usunąć ocenę?</p>
+        <div class="modal-action">
+            <form method="dialog" th:action="'/deleteGrade/' + ${grade.id}" th:method="POST">
+                <input type="hidden" name="login" placeholder="Login" th:value="${user.login}" />
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn btn-outline border btn-error">Tak</button>
+                <button class="btn btn-outline border btn-success">Nie</button>
             </form>
         </div>
     </div>

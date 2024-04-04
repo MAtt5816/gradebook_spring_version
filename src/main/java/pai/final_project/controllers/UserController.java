@@ -227,4 +227,15 @@ public class UserController {
         }
         return "redirect:/";
     }
+
+    @PostMapping("deleteGrade/{gradeId}")
+    public String deleteGradeDELETE(@PathVariable Integer gradeId, @ModelAttribute User user, Principal principal) {
+        Grade grade = gradeDao.findGradeById(gradeId);
+        User user1 = userDao.findByLogin(user.getLogin());
+        if (Objects.equals(principal.getName(), user1.getLogin()) && user1.getRole() == UserRoles.TEACHER) {
+            gradeDao.delete(grade);
+        }
+
+        return "redirect:/";
+    }
 }
