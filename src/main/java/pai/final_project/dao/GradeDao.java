@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface GradeDao extends CrudRepository<Grade, Integer> {
     public List<Grade> findAllByStudentLoginAndSubjectName(String login, String subjectName);
+    public  Grade findGradeById(Integer Id);
 }

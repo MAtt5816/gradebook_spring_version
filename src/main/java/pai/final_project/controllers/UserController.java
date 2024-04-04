@@ -194,4 +194,37 @@ public class UserController {
         }
         return "redirect:/";
     }
+
+    @GetMapping("/editGrade/{gradeId}")
+    public String editGrade(@PathVariable Integer gradeId, Model m, Principal principal) {
+        m.addAttribute("user", userDao.findByLogin(principal.getName()));
+        m.addAttribute("grade", gradeDao.findGradeById(gradeId));
+        m.addAttribute("subjects", subjectDao.findAll());
+        return "grade/edit";
+    }
+
+    @PostMapping("/editGrade")
+    public String editGradePOST(@RequestParam("gradeId") Integer gradeId, @RequestParam("subjectName") String subjectName, @Valid Grade grade, BindingResult binding, Principal principal) {
+        if (binding.hasErrors()) {
+            return "redirect:/editGrade/" + gradeId;
+        }
+
+        User user = userDao.findByLogin(principal.getName());
+        if (user.getRole() == UserRoles.TEACHER) {
+            Subject subject = subjectDao.findByName(subjectName);
+            Teacher teacher = teacherDao.findByLogin(user.getLogin());
+
+            Grade grade1 = gradeDao.findGradeById(gradeId);
+            grade1.setMark(grade.getMark());
+            grade1.setComment(grade.getComment());
+            grade1.setSubject(subject);
+            grade1.setTeacher(teacher);
+
+            gradeDao.save(grade1);
+        } else {
+            binding.addError(new ObjectError("No permissions", "The logged-in user is not teacher"));
+            return "redirect:/editGrade/" + gradeId;
+        }
+        return "redirect:/";
+    }
 }
