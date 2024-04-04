@@ -1,6 +1,5 @@
 package pai.final_project.controllers;
 
-import jakarta.persistence.CascadeType;
 import org.springframework.data.domain.Sort;
 import org.springframework.validation.ObjectError;
 import pai.final_project.dao.*;
@@ -106,6 +105,7 @@ public class UserController {
                 m.addAttribute("grade", new Grade());
                 break;
         }
+        m.addAttribute("grades", gradeDao.findAll());
         m.addAttribute("gradesMaxCount", gradesMaxCount);
         m.addAttribute("user", user);
 

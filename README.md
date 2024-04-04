@@ -13,7 +13,9 @@
 * Spring Boot 3.2.3
 * Thymeleaf
 * Hibernate
+* H2
 * Preline UI
+* DaisyUI
 * Tailwind CSS
 
 ## How to run (dev)
